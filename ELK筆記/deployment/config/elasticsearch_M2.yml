@@ -1,0 +1,25 @@
+cluster.name: es_cluster
+node.name: Elasticsearch_M2
+
+node.roles: [ master ]
+
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+
+network.host: 0.0.0.0
+http.port: 9200
+
+discovery.seed_hosts:
+- 10.140.0.13
+- 10.140.0.9
+- 10.140.0.8
+
+cluster.initial_master_nodes:
+- Elasticsearch_M1
+- Elasticsearch_M2
+- Elasticsearch_M3
+
+discovery.zen.minimum_master_nodes: 2
+
+http.cors.enabled: true
+http.cors.allow-origin: "*"

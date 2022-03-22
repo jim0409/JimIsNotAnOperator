@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  elasticsearch_exporter:
+    image: justwatch/elasticsearch_exporter:1.1.0
+    command:
+      # - '--es.uri=http://elasticsearch:9200'
+      - '--es.uri=http://127.0.0.1:9200'
+    restart: always
+    network_mode: host

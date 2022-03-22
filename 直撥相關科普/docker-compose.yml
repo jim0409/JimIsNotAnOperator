@@ -1,0 +1,14 @@
+version: '3.1'
+
+networks:
+ proxynet:
+  driver: bridge
+
+services:
+   rtmp-server:
+     networks:
+       - proxynet
+     image: tiangolo/nginx-rtmp
+     container_name: rtmpserver
+     ports:
+       - "1935:1935"

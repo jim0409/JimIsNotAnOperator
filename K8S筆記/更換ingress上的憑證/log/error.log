@@ -1,0 +1,5 @@
+2020/04/18 05:52:17 [emerg] 1#1: unexpected end of file, expecting ";" or "}" in /etc/nginx/nginx.conf:33
+2020/04/18 05:54:38 [notice] 15#15: signal process started
+2020/04/18 05:57:03 [notice] 18#18: signal process started
+2020/04/18 05:57:23 [notice] 20#20: signal process started
+2020/04/18 05:57:23 [notice] 22#22: signal process started

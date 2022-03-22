@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-commander
+  labels:
+    app: redis-commander
+spec:
+  selector:
+    matchLabels:
+      app: redis-commander
+  template:
+    metadata:
+      labels:
+        app: redis-commander
+    spec:
+      hostNetwork: false # 
+      containers:
+      - name: redis-commander
+        image: rediscommander/redis-commander:latest
+        imagePullPolicy: Always # 當有新的映像檔更新時會自動去拉映像檔的功能
+        ports:
+        - containerPort: 8081
+        env:
+        - name: REDIS_HOSTS
+          value: redis1:redis1:6379:0:,redis2:redis2:6379:0:,redis3:redis3:6379:0:,redis4:redis4:6379:0:,redis5:redis5:6379:0:,redis6:redis6:6379:0:,

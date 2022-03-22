@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  sc-api-ui:
+    container_name: sc-api-ui
+    image: swaggerapi/swagger-ui
+    environment:
+      API_URL: api.yml
+    volumes:
+      - ./index.yml:/usr/share/nginx/html/index.yml
+      - ./api.yml:/usr/share/nginx/html/api.yml
+    ports:
+      - 8888:8080

@@ -1,0 +1,13 @@
+title: 刪除評論流程
+
+participant 用户 as user
+participant 服務端 as hero
+
+user->>hero: 用户刪除評論
+hero->>hero: 根據評論ID 查詢數據庫是否存在
+hero->>hero: 存在則邏輯刪除數據庫中的數據
+hero->>hero: 刪除 Zset 中相應的元素
+hero->>hero: 刪除對應的評論內容緩存
+hero->>hero: 刪除對應的評論回覆
+hero->>hero: 總評論數 - 1
+hero-->>user: 返回刪除成功

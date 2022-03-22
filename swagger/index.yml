@@ -1,0 +1,115 @@
+components:
+  schemas:
+    # Request Response schema
+    ApiFormat:
+      description: 請求/回覆 相關格式
+      properties:
+        meta-data:
+          description: 回覆資料格式
+          type: object
+          properties:
+            code:
+              description: 中繼代碼 (e.g. 2200)
+              type: integer
+            status:
+              description: 中繼狀態 (e.g. 'success')
+              type: string
+            message:
+              description: 中繼訊息 (e.g. 'OK.')
+              type: string
+        null-data:
+          description: 空值資料 (e.g. null)
+          type: object
+          nullable: true
+
+    # Customer field
+    ### user info
+    UserInfo:
+      description: 使用者相關的參數
+      properties:
+        MetaPlayerId:
+          description: MetaPlayerId (e.g. '1')
+          type: string
+          default: '1040798'
+        EcSiteId:
+          description: EcSiteId (e.g. '1')
+          type: string
+          default: '1'
+        EcSiteName:
+          description: EcSiteName (e.g. 'sportTest')
+          type: string   
+          default: 'sportTest'
+        RawEcId:
+          description: RawEcId (e.g. '1')
+          type: string
+          default: '1'
+        RawEcName:
+          description: RawEcName (e.g. '虛無來的')
+          type: string
+          default: '虛無來的'
+        PlayerNickname:
+          description: PlayerNickname (e.g. '第一個玩家')
+          type: string
+          default: '第一個玩家'
+        Password:
+          description: Password (e.g. '123456')
+          type: string
+          default: '123456'
+        Language:
+          description: Language (e.g. 'zh-cn')
+          type: string
+          default: 'zh-cn'
+        NeedPassword:
+          description: NeedPassword (e.g. 'y/n')
+          type: string
+          default: 'n'
+        MetaPlayersIconURL:
+          description: MetaPlayersIconURL (e.g. 'https://github.githubassets.com/favicons/favicon-dark.png')
+          type: string
+          default: 'https://github.githubassets.com/favicons/favicon-dark.png'
+
+    ClubInfo:
+      description: 俱樂部相關的參數
+      properties:
+        ClubId:
+          description: ClubId (e.g. '1040190')
+          type: string
+          default: '1040190'
+
+    ### sport info
+    SportInfo:
+      description: 體育賽事相關的參數
+      properties:
+        sportid:
+          description: 體育賽事 (e.g. '00001')
+          type: string
+        leagueid:
+          description: 聯賽賽事 (e.g. '00001')
+          type: string
+        matchid:
+          description: 場次賽事 (e.g. '00001')
+          type: string
+        bettypeid:
+          description: 下注形式 (e.g. '00001')
+          type: string
+
+  # authorization field
+  securitySchemes:
+    api-auth-header:
+      type: apiKey
+      name: authsports
+      in: header
+
+  # customerize response data
+  responses:
+    response-data:
+      description: 成功回應
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: "#/components/schemas/ApiFormat/properties/meta-data"
+              data:
+                $ref: "#/components/schemas/ApiFormat/properties/null-data"

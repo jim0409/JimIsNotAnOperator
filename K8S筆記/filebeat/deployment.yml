@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebeat-deployment
+  labels:
+    app: filebeat
+spec:
+  # replicas: 3 # number of pods need to create
+  selector:
+    matchLabels:
+      app: filebeat
+  template:
+    metadata:
+      labels:
+        app: filebeat
+    spec:
+      hostNetwork: false # 
+      containers:
+      - name: filebeat
+        image: docker.elastic.co/beats/filebeat:7.9.1
+        imagePullPolicy: Always # 當有新的映像檔更新時會自動去拉映像檔的功能
+        # ports:
+        # - containerPort: 80
+        volumeMounts:
+         - name: nginx-pv
+           mountPath: /var/log/nginx
+         - name: filebeat-pv
+           mountPath: /etc/filebeat/filebeat.yml
+
+      volumes:
+        - name: nginx-pv
+          persistentVolumeClaim:
+            claimName: nginx-pvc
+        - name: filebeat-pv
+          persistentVolumeClaim:
+            claimName: filebeat-pvc

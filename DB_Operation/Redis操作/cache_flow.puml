@@ -1,0 +1,41 @@
+@startuml
+
+skinparam sequence{
+    ' ArrowColor Blue
+    ArrowColor #030ffc
+}
+
+skinparam activity {
+    DiamondBackgroundColor #fc9003
+    DiamondBorderColor #fc9003
+    ' DiamondBackgroundColor #AAAAAA
+    ' DiamondBorderColor #BBBBBB
+}
+
+(*) --> "Client Request" 
+
+--> if "Cached Layer\n Existed Valid Data" then
+    ' -left->[true] "Return Valid Data"
+    ' -[#5d24c8]->[true] "Return Valid Data"
+    -->[true] "Return Valid Data"
+else
+    ' [false] if "Database Layer\n Existed Data" then
+     -[#fc031c]-> if "Database Layer\n Existed Data" then
+    '   -[#5d24c8]->[true] "Update Cached Layer\n With Newest Data"
+      -->[true] "Update Cached Layer\n With Newest Data"
+    '   -[#5d24c8]-> "Return Valid Data"
+      --> "Return Valid Data"
+    '   -[#5d24c8]-> "End Request"
+      --> "End Request"
+    '   --> (*)
+    '   -right-> (*)
+    else
+  -[#fc031c]-> "Return\nData not found"
+'   ->[false] "Return\nData not found"
+'   -->[End\n Request] (*)
+'   -[#5d24c8]-> "End Request"
+  --> "End Request"
+endif
+
+
+@enduml

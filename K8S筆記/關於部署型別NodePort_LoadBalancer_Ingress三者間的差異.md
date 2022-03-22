@@ -1,0 +1,11 @@
+# 簡單敘述在K8S部署文件上type對於NodePort/LoadBalancer/Ingress三種方式部署service的差異！
+
+# Node
+
+# refer
+- https://kubernetes.io/cn/docs/tasks/access-application-cluster/connecting-frontend-backend/
+- https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0
+
+
+# refer - 使用busybox做k8s內部的DNS Debug
+- https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  labels:
+    app: postgres
+spec:
+  # externalTrafficPolicy: Cluster # comment out this to use ingress instead of service
+  # type: LoadBalancer # use extenal IP
+  type: NodePort # use NAT inside k8s
+  # clusterIP: None
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+

@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  title: SportControllerAPI
+  version: 1.0.7
+servers:
+  - url: http://127.0.0.1:5200/v1
+  - url: http://sportcontroller.smarter.cafe:5200/v1
+
+paths:
+  # others
+  /_health:
+    get:
+      description: 查詢健康
+      tags:
+        - others
+      responses:
+        "200":
+          description: 成功回應
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "./index.yml#/components/responses/response-data"
+
+  /admin/login:
+    post:
+      description: admin 使用者登入
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  default: "InitAdminAccount"
+                password:
+                  type: string
+                  default: "123456"
+      responses:
+        "200":
+          $ref: "./index.yml#/components/responses/response-data"
+
+
+

@@ -1,0 +1,12 @@
+title: 獲取評論列表流程
+
+participant 用户 as user
+participant 服務端 as hero
+
+user->>hero: 用户進入評論列表頁
+hero->>hero: 從數據庫中查詢前 50 條熱點數據
+hero->>hero: 將 50 個評論ID 放入 Zset 中，評論內容用單獨 key 存儲
+hero->>hero: 根據頁碼計算偏移量，用 zrevrang 方法獲取當前頁評論ID 列表
+hero->>hero: 如果偏移量大於 50 則繼續從數據庫中查詢並追加到 Zset 中
+hero->>hero: 拼裝點贊數、回覆數等附加數據
+hero-->>user: 返回評論列表

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stan-config
+data:
+  stan.conf: |
+    port: 4222
+    http: 8222
+
+    streaming {
+     ns: "nats://nats:4222"
+
+     id: stan
+     store: file
+     dir: /data/stan/store
+     cluster {
+       node_id: $POD_NAME
+       log_path: /data/stan/log
+       # Explicit names of resulting peers
+       peers: ["stan-0", "stan-1", "stan-2"]
+      }
+    }

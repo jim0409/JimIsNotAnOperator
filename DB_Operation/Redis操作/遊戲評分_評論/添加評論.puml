@@ -1,0 +1,18 @@
+title: 添加評論流程
+
+participant 用户 as user  
+participant 服務端 as hero
+participant  定時器 as timer
+
+user->>hero: 用户發表評論
+hero->>hero: 查詢數據庫中最大的評論ID 並放入 Redis 中
+hero->>hero: 緩存的最大評論ID + 1
+hero->>hero: 拼裝評論內容並放入 Redis 中
+hero->>hero: 將評論ID 添加到熱點評論ID 緩存列表中
+note over hero: 實時變動遊戲評分
+hero->>hero: 相應評分數 + 1
+hero->>hero: 總評論數 + 1 且總評分累加
+hero-->>user: 返回評論成功
+note over timer: 每隔半小時
+note over timer: 數據庫回寫
+timer->>timer: 回寫在「數據庫最大評論ID 及 Redis 最大評論ID」 區間內的數據

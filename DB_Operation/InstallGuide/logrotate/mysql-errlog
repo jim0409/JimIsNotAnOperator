@@ -1,0 +1,8 @@
+"/var/lib/mysql/*.err"
+{
+    ifempty
+    daily
+    dateext
+    copytruncate
+    rotate 14
+}

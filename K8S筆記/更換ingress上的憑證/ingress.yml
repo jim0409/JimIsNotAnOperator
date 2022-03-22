@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: tls-nginx-ingress
+spec:
+  tls:
+  - hosts:
+    - jim.test.com
+    secretName: testsecret-tls
+  rules:
+    - host: jim.test.com
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: nginx-service
+            servicePort: 80

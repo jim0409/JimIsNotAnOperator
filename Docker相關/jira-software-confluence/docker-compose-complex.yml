@@ -1,0 +1,85 @@
+version: "3"
+
+services:
+  jira:
+    container_name: jira
+    image: atlassian/jira-software
+    environment:
+      JVM_MINIMUM_MEMORY: 2048m
+      JVM_MAXIMUM_MEMORY: 4096m
+      JVM_RESERVED_CODE_CACHE_SIZE: 1024m
+      # # Loading class `com.mysql.jdbc.Driver'. This is deprecated ...
+      # # 可以透過UI設定，這邊要用mysql 5.6 以下的連線方式做。
+      # ATL_JDBC_URL: mysql:3306
+      # ATL_JDBC_USER: jira
+      # ATL_JDBC_PASSWORD: jira
+      # ATL_DB_DRIVER: com.mysql.jdbc.Driver
+      # ATL_DB_TYPE: mysql
+    ports:
+      - 8080:8080
+    volumes:
+      - "./jiraVolume:/var/atlassian/application-data/jira"
+      - "./mysql-connector-java-8.0.21.jar:/opt/atlassian/jira/lib/mysql-connector-java-8.0.21.jar"
+    networks:
+      - proxy-network
+    depends_on:
+      - mysql
+
+  confluence:
+    container_name: confluence
+    image: atlassian/confluence-server
+    ports:
+      - 8090:8090
+      - 8091:8091
+    volumes:
+      - "./confluence:/var/atlassian/application-data/confluence"
+    networks:
+      - proxy-network
+
+  gitlab:
+    container_name: gitlab
+    image: gitlab/gitlab-ce:latest
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://127.0.0.1'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '33:22'
+    volumes:
+      - './srv/gitlab/config:/etc/gitlab'
+      - './srv/gitlab/logs:/var/log/gitlab'
+      - './srv/gitlab/data:/var/opt/gitlab'
+    networks:
+      - proxy-network
+
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    command:
+      - --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: jira
+      MYSQL_PASSWORD: jira
+      MYSQL_DATABASE: jira
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    networks:
+      - proxy-network
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    ports:
+      - 8081:8080
+    networks:
+      - proxy-network
+
+
+
+networks:
+  proxy-network:
+    driver: bridge

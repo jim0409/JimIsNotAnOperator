@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  jira:
+    container_name: jira
+    image: atlassian/jira-software
+    environment:
+      JVM_MINIMUM_MEMORY: 2048m
+      JVM_MAXIMUM_MEMORY: 4096m
+      JVM_RESERVED_CODE_CACHE_SIZE: 1024m
+    ports:
+      - 8080:8080
+    volumes:
+      - "./jiraVolume:/var/atlassian/application-data/jira"
+    networks:
+      - proxy-network
+
+  confluence:
+    container_name: confluence
+    image: atlassian/confluence-server
+    ports:
+      - 8090:8090
+      - 8091:8091
+    volumes:
+      - "./confluence:/var/atlassian/application-data/confluence"
+    networks:
+      - proxy-network
+
+
+
+networks:
+  proxy-network:
+    driver: bridge
+
+

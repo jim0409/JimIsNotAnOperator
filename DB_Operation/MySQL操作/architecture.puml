@@ -1,0 +1,43 @@
+@startuml
+Title MySQL Architecture
+
+note left of "CONNECTOR" : handler connect request\nmanage authorization.
+
+ClientRequest --> ConnectorRequest
+
+package "CONNECTOR" {
+	ConnectorRequest --> [Cached_TableTemplate]
+	ConnectorRequest --> [UnCached]
+}
+
+package "QUERY CACHE" {
+	[Cached_TableTemplate] <-- [Return Cacehd data]
+}
+
+
+package "PARSER" {
+	note left of [Processor] : Sql syntax check\ngenerate sql_id
+	[UnCached] --> [Processor]
+	[Processor] --> sql_id
+}
+
+package "OPTIMIZER" {
+	sql_id --> [Executor]
+}
+
+package "STORAGE ENGINE" {
+	[Executor] --> [EngineAddapter]
+	[EngineAddapter] --> [Engine]
+}
+
+database "DATA FILEs" {
+	folder "Main Data"{
+		[Engine] --> [data files]
+	}
+	folder "..." {
+		[data files] --> [detail data ... ]
+	}
+}
+
+
+@enduml

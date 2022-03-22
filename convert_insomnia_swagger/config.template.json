@@ -1,0 +1,9 @@
+{
+	"title" : "API Name",
+	"version" : "API version",
+	"host" : "API URL",
+	"basePath" : "Base URL",
+	"schemes" : "HTTP protocol",
+	"description" : "API description"
+  }
+  

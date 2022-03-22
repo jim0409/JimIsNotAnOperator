@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong-migrate-deployment
+  labels:
+    app: kong-migrate
+spec:
+  # replicas: 3 # number of pods need to create
+  selector:
+    matchLabels:
+      app: kong-migrate
+  template:
+    metadata:
+      labels:
+        app: kong-migrate
+    spec:
+      hostNetwork: false
+      containers:
+      - name: kong
+        image: kong:1.5
+        imagePullPolicy: Always # 當有新的映像檔更新時會自動去拉映像檔的功能
+        args:
+        - kong
+        - migrations
+        - bootstrap
+        env:
+        - name: KONG_DATABASE
+          value: postgres
+        - name: KONG_PG_DATABASE
+          value: kong
+        - name: KONG_PG_HOST
+          value: postgres-service
+        - name: KONG_PG_PASSWORD
+          value: kong
+        - name: KONG_PG_USER
+          value: kong

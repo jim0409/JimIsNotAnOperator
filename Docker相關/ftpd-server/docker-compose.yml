@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  ftpd:
+    image: fauria/vsftpd
+    network_mode: host
+    restart: always
+    ports:
+      - 21:21
+      - 20:20
+    container_name: ftpd
+    volumes:
+      - /usr/share/nginx/ftpfiles:/home/vsftpd/root/ftpfiles
+    environment:
+      - FTP_USER=root
+      - FTP_PASS=password
+      - PASV_ADDRESS=${REPLACE_WITH_HOST_ADDR}
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
+

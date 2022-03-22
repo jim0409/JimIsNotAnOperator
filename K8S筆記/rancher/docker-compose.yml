@@ -1,0 +1,21 @@
+version: '3'
+services:
+  rancher:
+    image: rancher/server:v1.0.2
+    container_name: rancher
+    restart: always
+    privileged: true 
+    ports:
+      - '8080:8080'
+
+# running on vm only
+# version: '3'
+# services:
+#   rancher:
+#     image: rancher/rancher:latest
+#     container_name: rancher
+#     restart: always
+#     privileged: true
+#     ports:
+#       - '80:80'
+#       - '443:443'

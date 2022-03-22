@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis3
+  labels:
+    app: redis3
+spec:
+  selector:
+    matchLabels:
+      app: redis3
+  template:
+    metadata:
+      labels:
+        app: redis3
+    spec:
+      hostNetwork: false # 
+      containers:
+      - name: redis3
+        image: redis:latest
+        imagePullPolicy: Always # 當有新的映像檔更新時會自動去拉映像檔的功能
+        # args: ["--requirepass", "yourpassword"]
+        command:
+          - "redis-server"
+        args: 
+          # - "--requirepass"
+          # - "yourpassword"
+          - "--cluster-enabled"
+          - "yes"
+          - "--appendonly"
+          - "yes"
+          - "--bind"
+          - "0.0.0.0"
+        ports:
+        - containerPort: 6379

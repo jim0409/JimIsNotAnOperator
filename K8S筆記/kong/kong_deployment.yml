@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong-deployment
+  labels:
+    app: kong
+spec:
+  # replicas: 3 # number of pods need to create
+  selector:
+    matchLabels:
+      app: kong
+  template:
+    metadata:
+      labels:
+        app: kong
+    spec:
+      hostNetwork: false
+      containers:
+      - name: kong
+        image: kong:1.5
+        imagePullPolicy: Always # 當有新的映像檔更新時會自動去拉映像檔的功能
+        ports:
+        - containerPort: 8001
+          name: admin-port
+        - containerPort: 8000
+          name: reverse-port
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: /dev/stdout
+        - name: KONG_ADMIN_ERROR_LOG
+          value: /dev/stderr
+        - name: KONG_ADMIN_LISTEN
+          value: 0.0.0.0:8001
+        - name: KONG_DATABASE
+          value: postgres
+        - name: KONG_PG_DATABASE
+          value: kong
+        - name: KONG_PG_HOST
+          value: postgres-service
+        - name: KONG_PG_PASSWORD
+          value: kong
+        - name: KONG_PG_USER
+          value: kong
+        - name: KONG_PROXY_ACCESS_LOG
+          value: /dev/stdout
+        - name: KONG_PROXY_ERROR_LOG
+          value: /dev/stderr
+        - name: KONG_PROXY_LISTEN
+          value: 0.0.0.0:8000

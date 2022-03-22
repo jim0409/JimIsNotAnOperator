@@ -1,0 +1,65 @@
+version: "3"
+services:
+  nginx:
+    image: nginx:1.13.7
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    ports:
+     - 9090:9090
+    volumes:
+     - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+
+  grafana:
+    # container_name: grafana # dynamic add extra container with --scale 
+    image: grafana/grafana
+    user: "0"
+    environment:
+      GF_LOG_LEVEL: error
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+      GF_PATHS_CONFIG: /etc/grafana/grafana.ini
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config/grafana:/etc/grafana
+      - ./config/dashboards:/tmp/dashboards
+
+  msyql:
+    container_name: mysql
+    image: mysql
+    command: 
+      - --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - 3306:3306
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    ports:
+      - 8080:8080
+
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    environment:
+      # - REDIS_HOSTS=redis:redis:6379:0:yourpassword
+      - REDIS_HOSTS=redis:redis:6379:0
+    ports:
+      - "8081:8081"
+
+  redis:
+    container_name: redis
+    # command: redis-server --requirepass yourpassword
+    image: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FingerprintJS Page</title>
+
+	<!-- pre-load javascript from cdn -->
+	<script async src="//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"
+		onload="initFingerprintJS()"></script>
+
+	<script>
+		var vId;
+		function initFingerprintJS() {
+			FingerprintJS.load().then(fp => {
+				fp.get().then(result => {
+					vId = result.visitorId;
+					console.log(vId);
+
+					document.getElementById("fp_demo").innerHTML = vId;
+				});
+			});
+		}
+	</script>
+
+</head>
+
+<body>
+
+	<div>
+		<!-- show server side include binding with nginx variable -->
+		<!--# echo var="server_side_include"-->
+		<span> : </span>
+		<span id="fp_demo">--</span>
+	</div>
+
+</body>
+
+
+
+</html>

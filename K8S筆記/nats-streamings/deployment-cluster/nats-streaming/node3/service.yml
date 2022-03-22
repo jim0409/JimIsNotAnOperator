@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: stan3
+  labels:
+    app: stan3
+spec:
+  # type: LoadBalancer # use extenal IP
+  clusterIP: None
+  selector:
+    app: stan3
+  ports:
+  - name: metrics
+    port: 7777

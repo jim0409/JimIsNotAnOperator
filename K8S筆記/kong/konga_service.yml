@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: konga-service
+  labels:
+    app: konga
+spec:
+  # externalTrafficPolicy: Cluster # comment out this to use ingress instead of service
+  # type: LoadBalancer # use extenal IP
+  type: NodePort # use NAT inside k8s
+  # clusterIP: None
+  selector:
+    app: konga
+  ports:
+    - protocol: TCP
+      port: 1338
+      targetPort: 1338

@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+    phpweb:
+        image: phpweb
+        container_name: phpweb
+        build: .
+        # according to developer environment uncomment below ..
+        # volumes:
+        #     - ./php:/usr/share/nginx/php
+        #     - ./entrypoint.sh:/entrypoint.sh
+        #     - ./php.ini:/usr/local/php/etc/php.ini
+        #     - ./nginx.conf:/etc/nginx/nginx.conf
+        #     - ./php-fpm.conf:/usr/local/php/etc/php-fpm.conf
+        # command: sleep 365d
+        ports:
+            - "80:80"

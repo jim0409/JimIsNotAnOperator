@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arangodb
+  labels:
+    app: arangodb
+spec:
+  # replicas: 3 # number of pods need to create
+  selector:
+    matchLabels:
+      app: arangodb
+  template:
+    metadata:
+      labels:
+        app: arangodb
+    spec:
+      hostNetwork: false 
+      containers:
+      - name: arangodb
+        image: arangodb
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3306
+        env:
+        - name: ARANGO_ROOT_PASSWORD
+          value: yourpassword
+        volumeMounts:
+         - name: arangodb-persistent-storage
+           mountPath: /var/lib/arangodb3
+         - name: arangodb-apps-persistent-storage
+           mountPath: /var/lib/arangodb3-apps
+
+      volumes:
+        - name: arangodb-persistent-storage
+          persistentVolumeClaim:
+            claimName: arangodb-volumeclaim
+        - name: arangodb-apps-persistent-storage
+          persistentVolumeClaim:
+            claimName: arangodb-apps-volumeclaim

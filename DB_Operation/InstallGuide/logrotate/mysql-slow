@@ -1,0 +1,9 @@
+"/data/logs/mysql/slowlog/*slow*log"
+{
+    ifempty
+    compress
+    daily
+    dateext
+    copytruncate
+    rotate 31
+}

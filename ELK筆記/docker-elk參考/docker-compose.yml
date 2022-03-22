@@ -1,0 +1,120 @@
+version: '2'
+
+services:
+  elasticsearch:
+    build:
+      context: elasticsearch/
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: changeme
+    networks:
+      - proxy-network
+    container_name: "elasticsearch"
+    restart: always
+
+  logstash:
+    build:
+      context: logstash/
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - /etc/hosts:/etc/hosts:ro
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+      - "5044:5044"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - proxy-network
+    container_name: "logstash"
+    depends_on:
+      - elasticsearch
+    restart: always
+
+  kibana:
+    build:
+      context: kibana/
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    ports:
+      - "5601:5601"
+    networks:
+      - proxy-network
+    container_name: "kibana"
+    depends_on:
+      - elasticsearch
+    restart: always
+
+  nsqlookupd:
+    image: nsqio/nsq
+    command: /nsqlookupd
+    hostname: nsqlookupd
+    ports:
+      - "4161:4161"
+      - "4160:4160"
+    container_name: "nsqlookupd"
+    networks:
+      - proxy-network
+
+  nsqd:
+    image: nsqio/nsq
+    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160
+    depends_on:
+      - nsqlookupd
+    hostname: nsqd # 要在/etc/hosts綁定 127.0.0.1 nsqd，否則會變成logstash找nsqadmin要資訊的時候無法解析nsqd
+    ports:
+      - "4151:4151"
+      - "4150:4150"
+    container_name: "nsqd"
+    networks:
+      - proxy-network
+
+  nsqadmin:
+    image: nsqio/nsq
+    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    depends_on:
+      - nsqlookupd
+    hostname: nsqadmin
+    ports:
+      - "4171:4171"
+    container_name: "nsqadmin"
+    networks:
+      - proxy-network
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - proxy-network  
+
+  kafka:
+    image: wurstmeister/kafka
+    #build: .
+    ports:
+      - "9092:9092"
+    environment:
+      # 因為kafka放在container裡面。如果logstash來拿的時候會參照這個值去訪問kafk的IP，會變成logstash訪問127.0.0.1(logstash訪問logstash自己的)的狀況
+      # 但是用`kafka`的dns來找又會變成無法正常生產到kafka ... 所以 /etc/hosts 還要再額外綁定一條record `127.0.0.1 kafka`
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_PORT: "9092"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_BROKER_ID: "1"
+      KAFKA_LOG_DIRS: "/opt/kafka/data"
+      KAFKA_CREATE_TOPICS: "sarama:1:2"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - proxy-network  
+
+
+networks:
+  proxy-network:
+    driver: bridge

@@ -1,0 +1,6 @@
+server.port: 5601
+server.host: "0.0.0.0"
+
+# 這邊因為有做nginx反向代理複數個es-master，所以看80 port
+elasticsearch.hosts: ["http://10.140.0.216"]
+# elasticsearch.hosts: ["http://127.0.0.1:9200"]

@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1 # 官網寫使用: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  # annotations:
+  #   nginx.ingress.kubernetes.io/rewrite-target: /test
+
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx-service
+          servicePort: 80
+      - path: /adminer
+        backend:
+          serviceName: adminer-service
+          servicePort: 8080
+      # - path: /redisc
+      #   backend:
+      #     serviceName: redis-commander-service
+      #     servicePort: 8081
+
+
+# refer notes:
+# https://github.com/kubernetes/website/issues/14322
+# ingress在networking.k8s.io有bug，無法正常運作

@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-app
+  # namespace: redis-cluster
+  labels:
+    app: redis-cluster-app
+spec:
+  selector:
+    matchLabels:
+      app: redis-cluster-app
+  serviceName: "redis-cluster-app"
+  replicas: 6
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      # storageClassName: "redis-storage-class"
+      volumeMode: "Filesystem"
+      resources:
+        requests:
+          storage: 1Gi
+  template:
+    metadata:
+      labels:
+        app: redis-cluster-app
+    spec:
+      # Prevent Redis Cluster pods running in same host.
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #     - topologyKey: "kubernetes.io/hostname"
+      #       labelSelector:
+      #         matchExpressions:
+      #         - key: app
+      #           operator: In
+      #           values:
+      #           - redis-cluster-app
+      containers:
+      - name: redis
+        # image: "redis:5.0.3-alpine3.9"
+        image: "redis:6.0.6"
+        command:
+          - "redis-server"
+        args:
+          - "/etc/redis/redis.conf"
+          # - "--protected-mode"
+          # - "no"
+          # - "--cluster-announce-ip"
+          # - " $(MY_POD_IP)"
+        ports:
+          - name: redis
+            containerPort: 6379
+            protocol: "TCP"
+          - name: cluster
+            containerPort: 16379
+            protocol: "TCP"
+        volumeMounts:
+          - name: "redis-conf"
+            mountPath: "/etc/redis"
+          - name: "redis-data"
+            # mountPath: "/var/lib/redis"
+            mountPath: "/usr/local/etc"
+        # env:
+        # - name: MY_POD_IP
+        #   valueFrom:
+        #     fieldRef:
+        #       fieldPath: status.podIP
+      volumes:
+      - name: "redis-conf"
+        configMap:
+          name: "redis-conf"
+          items:
+            - key: "redis.conf"
+              path: "redis.conf"

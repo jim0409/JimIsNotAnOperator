@@ -1,0 +1,42 @@
+version: "3"
+
+networks:
+  proxy-net:
+    driver: bridge
+
+services:
+  tcpnginx:
+    # image: nginx:1.13.7
+    image: openresty/openresty # 2020/03/03 - 1.15.8.2
+    container_name: tcpnginx
+    networks:
+      - proxy-net
+    ports:
+      - "3000:3000"
+    volumes:
+      # put nginx.conf outside
+      # - ./tcp_nginx.conf:/etc/nginx/nginx.conf
+      - ./tcp_nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+
+
+  tcpecho1:
+    image: cjimti/go-echo
+    container_name: tcpecho1
+    environment:
+      - TCP_PORT=2701
+      - NODE_NAME=EchoNode
+    networks:
+      - proxy-net
+    # ports:
+      # - 2701
+    
+  tcpecho2:
+    image: cjimti/go-echo
+    container_name: tcpecho2
+    environment:
+      - TCP_PORT=2701
+      - NODE_NAME=EchoNode
+    networks:
+      - proxy-net
+    # ports:
+      # - 2701

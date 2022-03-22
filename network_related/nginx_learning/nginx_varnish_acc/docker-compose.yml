@@ -1,0 +1,32 @@
+version: "3"
+services:
+  web:
+    image: nginx:1.13.7
+    container_name: web
+    ports:
+      - "80:80"
+    volumes:
+      # put index.html in folder html would mount into conatiner
+      - ./html:/usr/share/nginx/html
+      # put default.conf in folder conf would moutn into ...
+      - ./default.conf:/etc/nginx/default.conf
+      # mount nginx logs
+      # - ./log:/var/log/nginx
+  
+  varnish:
+    image: varnish:6.3.1
+    container_name: varnish
+    ports:
+      - "8080:80"
+    volumes:
+      # replace varnish default.vcl with default.vcl
+      - ./default.vcl:/etc/varnish/default.vcl
+      - cache_vol:/var/lib/varnish
+
+
+# since var folder is specific for container
+volumes:
+  cache_vol:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs

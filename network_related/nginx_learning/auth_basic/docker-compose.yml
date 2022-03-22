@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  nginx:
+    image: quay.io/dtan4/nginx-basic-auth-proxy
+    container_name: nginx
+    ports:
+      - 80:80
+      - 8090:8090
+    environment:
+      - BASIC_AUTH_USERNAME=username
+      - BASIC_AUTH_PASSWORD=password
+      - SERVER_NAME=example.com               # option
+      - PORT=80                               # Expose Port
+      # - PROXY_PASS=https://www.google.com   # PROXY_PASS can't be empty
+      # - PROXY_PASS=http://172.16.117.130    # PROXY_PASS can access NAT
+      - PROXY_PASS=http://127.0.0.1:8090      # PROXY_PASS can access local port
+

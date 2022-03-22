@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  swagger_ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger_ui
+    ports:
+      - 8080:8080
+    volumes:
+     - "./swagger.json:/usr/share/nginx/html/swaggymnia/watchnow.json"
+    networks:
+      - proxy-network
+
+
+networks:
+  proxy-network:
+    driver: bridge

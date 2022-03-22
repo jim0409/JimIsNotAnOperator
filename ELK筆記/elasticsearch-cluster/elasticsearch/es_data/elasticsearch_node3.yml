@@ -1,0 +1,39 @@
+# 叢集名稱
+cluster.name: es_cluster
+
+# 主機名
+node.name: Elasticsearch_S3
+
+# 如果節點只有兩台，才需要配置。默認是true
+node.master: false
+node.data: true
+
+# 落地資料配置
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+
+# 網路配置
+network.host: 0.0.0.0
+http.port: 9200
+
+# 服務發現
+discovery.seed_hosts: 
+- 10.140.0.216
+- 10.140.0.217
+- 10.140.0.218
+
+cluster.initial_master_nodes: 
+- Elasticsearch_M1
+- Elasticsearch_M2
+- Elasticsearch_M3
+
+# 設定`自動發現節點主機`(Unicast)，不能跟discovery.seed_hosts並用
+# discovery.zen.ping.unicast.hosts: ["10.140.0.213","10.140.0.214"]
+
+# 防止"Node"節點故障，節點(Node)`2台`，設定值為`1`
+# 防止"Node"節點故障，節點(Node)`3台`，設定值為`2`
+discovery.zen.minimum_master_nodes: 3
+
+# 支援`跨網段`連線，並獲取`數據`
+http.cors.enabled: true
+http.cors.allow-origin: "*"

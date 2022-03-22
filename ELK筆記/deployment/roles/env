@@ -1,0 +1,13 @@
+# define es role ip
+export ES_M1="10.0.0.13"
+export ES_M2="10.0.0.8"
+export ES_M3="10.0.0.9"
+
+export ES_D1="10.0.0.15"
+export ES_D2="10.0.0.16"
+export ES_D3="10.0.0.17"
+
+export ES_I1="10.0.0.20"
+export ES_C2="10.0.0.19"
+export ES_T3="10.0.0.18"
+
