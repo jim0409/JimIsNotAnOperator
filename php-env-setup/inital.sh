@@ -71,3 +71,13 @@ cd /tmp/redis-2.2.7
 ./configure --with-php-config=/usr/local/php/bin/php-config
 make && make install
 
+
+# install zip
+cd /tmp
+wget https://pecl.php.net/get/zip-1.12.5.tgz
+tar zxf zip-1.12.5.tgz
+
+cd /tmp/zip-1.12.5
+/usr/local/php/bin/phpize
+./configure --with-php-config=/usr/local/php/bin/php-config
+make && make install

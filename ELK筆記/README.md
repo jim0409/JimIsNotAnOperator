@@ -16,3 +16,24 @@ GET _cat/indices
 2. logstash
 
 3. elastic-search
+
+# 後記:
+chown -R 1001 esdata
+```
+# docker-compose.yml
+...yml
+  elasticsearch:
+    image: elasticsearch:7.6.2
+    container_name: elasticsearch
+    volumes:
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: changeme
+      discovery.type: single-node
+...
+```

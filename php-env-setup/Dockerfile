@@ -68,10 +68,20 @@ RUN make && make install
 
 # install phpredis
 WORKDIR /tmp
-RUN  wget http://pecl.php.net/get/redis-2.2.7.tgz
+RUN wget http://pecl.php.net/get/redis-2.2.7.tgz
 RUN tar zxf redis-2.2.7.tgz
 
 WORKDIR /tmp/redis-2.2.7
+RUN /usr/local/php/bin/phpize
+RUN ./configure --with-php-config=/usr/local/php/bin/php-config
+RUN make && make install
+
+# install zip
+WORKDIR /tmp
+RUN wget https://pecl.php.net/get/zip-1.12.5.tgz
+RUN tar zxf zip-1.12.5.tgz
+
+WORKDIR /tmp/zip-1.12.5
 RUN /usr/local/php/bin/phpize
 RUN ./configure --with-php-config=/usr/local/php/bin/php-config
 RUN make && make install
